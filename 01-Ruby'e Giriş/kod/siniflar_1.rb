@@ -2,7 +2,6 @@ class Entity
   attr_accessor :type
 end
 
-
 class Person < Entity
   attr_accessor :first_name #Getter ve Setter
   attr_accessor :last_name
