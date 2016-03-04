@@ -312,16 +312,107 @@ end
 
 add(5, 3)
 => 8
+```
 
+---
+
+# Sınıflar
+
+```ruby
+
+class Person
+  attr_accessor :first_name #Getter ve Setter
+  attr_accessor :last_name
+
+  def initialize(first_name, last_name)
+    @first_name = first_name
+    @last_name = last_name
+  end
+
+  def full_name
+    "#{first_name} #{last_name}"
+  end
+end
+
+p = Person.new("John", "Doe")
+
+p.first_name
+=> "John"
+
+p.full_name
+=> "John Doe"
+```
+
+---
+
+# Sınıflar
+
+```ruby
+class Entity
+  attr_accessor :type
+end
+
+
+class Person < Entity
+  attr_accessor :first_name #Getter ve Setter
+  attr_accessor :last_name
+
+  def initialize(first_name, last_name)
+    @first_name = first_name
+    @last_name = last_name
+    @type = "Person"
+  end
+
+  def full_name
+    "#{first_name} #{last_name}"
+  end
+end
+
+p = Person.new("John", "Doe")
+
+p.type
+=> "Person"
 
 ```
+`kod/siniflar_1.rb`
+
+---
+
+# Modüller(Module)
+
+```ruby
+module FullName
+  def full_name
+    "#{first_name} #{last_name}"
+  end
+end
+
+class Person
+  include FullName
+  attr_accessor :first_name
+  attr_accessor :last_name
+
+  def initialize(first_name, last_name)
+    @first_name = first_name
+    @last_name = last_name
+  end
+end
+
+p = Person.new("John", "Doe")
+
+p.full_name
+=> "John Doe"
+
+```
+`kod/moduller_1.rb`
+
 ---
 
 
 
 # Referanslar
 
-http://nithinbekal.com/slides/ruby-101/#/47
+http://nithinbekal.com/slides/ruby-101/
 
     </textarea>
     <script src="https://gnab.github.io/remark/downloads/remark-latest.min.js">
