@@ -408,12 +408,70 @@ p.full_name
 
 ---
 
+```ruby
+class Person
+  attr_accessor :first_name
+  attr_accessor :last_name
+
+  @@population = 0
+
+  def initialize(first_name, last_name)
+    @first_name = first_name
+    @last_name = last_name
+    @@population += 1
+  end
+
+  def self.population
+    @@population
+  end
+
+  def full_name
+    "#{self.first_name} #{self.last_name}"
+  end
+end
+
+p = Person.new("John", "Doe")
+p = Person.new("Jane", "Doe")
+
+Person.population
+=> 2
+
+p.full_name
+=> Jane Doe
+
+```
+`kod/self_1.rb`
+
+---
+
+# Open Class
+
+Ruby'de class'lar istenildiği zaman genişletilebilir. Var olan methodlar override edilebilir, yeni methodlar eklenebilir.
+
+```ruby
+
+class Integer
+  def even?
+    (self % 2) == 0
+  end
+end
+
+5.even?
+=> false
+
+2.even?
+=> true
+
+```
+
+---
+
 
 
 # Referanslar
 
 http://nithinbekal.com/slides/ruby-101/
-
+http://www.slideshare.net/peter_marklund/ruby-on-rails-101-presentation-slides-for-a-five-day-introductory-course/29-VariableMethodAmbiguity_Gotchaclass_Person_attrwriter_paid
     </textarea>
     <script src="https://gnab.github.io/remark/downloads/remark-latest.min.js">
     </script>
