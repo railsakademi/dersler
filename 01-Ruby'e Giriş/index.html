@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Title</title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# Ruby'e Giriş
+
+---
+
+# İçerik
+
+1. Hello World
+2. Ruby Syntax'ı
+3. Veri Tipleri
+4. Koşul İfadeleri
+6. İterasyon
+7. Methodlar
+8. Obje ve Sınıflar
+9. Modüller
+---
+
+
+# 1. Hello World
+
+
+```ruby
+puts "Hello World"
+```
+
+---
+# Ruby'nin öne çıkan özellikleri
+
+* Geliştici mutluluğunu hedefler
+* İngilizce diline çok yakın
+* Gemler
+* Object Oriented
+* Açık Sınıflar
+* Dinamik Tipler
+
+---
+# Ruby Syntax'ı
+
+```ruby
+i = 5
+name = "Ruby on Rails"
+```
+
+```ruby
+if i == 1
+  puts "X"
+else
+  puts "Y"
+end
+```
+
+
+```ruby
+class Bike
+  def initialize(color, size)
+    ...
+  end
+end
+```
+
+---
+# Veri Tipleri
+
+* String
+* Numeric
+* NilClass
+* Symbol
+* Hash
+* Array
+
+---
+# String
+
+```ruby
+name = "Ruby on Rails"
+
+
+name.class
+=>  String
+
+
+name.length
+=>  13
+
+
+name.reverse
+=>  "sliaR no ybuR"
+
+
+welcome = "Welcome to #{name}"
+=>  "Welcome to Ruby on Rails"
+
+```
+
+---
+
+# Numeric
+
+.center[![Numeric](http://assets.devx.com/articlefigs/16002.gif)]
+
+---
+
+# Numeric
+
+
+```ruby
+x = 5
+y = 2.5
+
+x.class
+=>  Fixnum
+
+Fixnum.superclass
+=>  Integer
+
+Integer.superclass
+=>  Numeric
+
+y.class
+=>  Float
+
+y.superclass
+=>  Numeric
+
+x*y
+=> 12.5
+
+```
+
+---
+# NilClass
+
+* Ruby'de **null** değeri **nil** ile gösterilir.
+* **nil** de aslında bir objedir **NilClass** sınıfından türetilir.
+
+```ruby
+x = nil
+
+x.class
+=> NilClass
+
+x.foobar
+=> NoMethodError: undefined method `foobar` for nil:NilClass
+
+```
+
+---
+# Symbol
+
+* Semboller, string'e benzer bir veri tipidir.
+* Stringlere göre daha az memory kullanılır ve daha hızlı çalışır
+* Genelde Hash içerisinde key olarak kullanılır
+
+```ruby
+
+key = :name
+
+key.to_s
+=> "name"
+
+people = {...}
+
+people[:ahmet]
+=> ...
+
+people[:ali]
+=> ...
+
+
+```
+
+---
+# Hash
+
+* Hash'ler sözlük gibi çalışır
+* Hash içerisindeki objelere, key kullanara erişebilirsiniz
+
+```ruby
+
+person = {name: "Ahmet", job: "Developer"}
+person = {:name => "Ahmet", :job => "Developer"} # Eski syntax
+
+person[:name]
+=> "Ahmet"
+
+person.keys
+=> [:name, :job]
+
+
+```
+
+---
+
+# Array
+
+* Array'lerin boyutu dinamiktir
+* Array içerisine her tipte objeyi ekleyebilirsiniz
+
+```ruby
+
+people = ["Ali", "Ahmet", "Veli"]
+
+people[0]
+=> "Ali"
+
+people.count
+=> 3
+
+random_array = [1, 2.5, true, "foobar"]
+
+```
+
+---
+
+# Kosul İfadeleri
+
+
+```ruby
+
+if x == 0
+  puts "A"
+elsif x == 1
+  puts "B"
+else
+  puts "C"
+end
+
+if x != 1
+  puts "K"
+end
+
+unless x == 1
+  puts "K"
+end
+
+puts "L" if x == 5
+puts "M" unless x == 5
+
+while x == 10
+  puts x
+  x = x + 1
+end
+
+
+```
+
+---
+
+
+# İterasyon
+
+```ruby
+
+people = ["Ali", "Ahmet", "Veli"]
+
+people.each do |person|
+  puts "Kişi: #{person}"
+end
+
+# Kişi: Ali
+# Kişi: Ahmet
+# Kişi: Veli
+
+
+people.each_with_index do |person, i|
+  puts "Kişi #{i}: #{person}"
+end
+
+# Kişi 0: Ali
+# Kişi 1: Ahmet
+# Kişi 2: Veli
+
+
+```
+---
+
+
+# Method (Function)
+
+```ruby
+
+def add(x,y)
+  x + y
+end
+
+def add(x,y)
+  return x + y
+end
+
+
+add(5, 3)
+=> 8
+
+
+```
+---
+
+
+
+# Referanslar
+
+http://nithinbekal.com/slides/ruby-101/#/47
+
+    </textarea>
+    <script src="https://gnab.github.io/remark/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
