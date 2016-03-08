@@ -31,17 +31,121 @@ class: center, middle
 2. Rails Prensipleri
 3. MVC
 4. REST
-6. Rails Modülleri
-7. Rails Hello World Projesi
-8. Rails Dosya Yapısı
+5. Rails Modülleri
+6. Rails Hello World Projesi
+7. Rails Dosya Yapısı
+---
+ # 1. Neden Rails ?
+
+ * Ruby - geliştirici mutluluğu
+ * Rapid Development
+ * Community
+ * Okunabilir ve Self-documenting
+ * Generator desteği
+
+---
+ # 2. Rails Prensipleri
+
+  * MVC
+  * Convention Over Configuration
+  * DRY
+
+---
+  # 3. MVC
+
+  * Model (ActiveRecord)
+  * View (ActionView)
+  * Controller (ActionController)
+  .center[![:scale 80%](http://dab1nmslvvntp.cloudfront.net/wp-content/uploads/2012/10/mvc1.png)]
+
+---
+  # 4. REST
+  ## Representational state transfer
+
+  * JSON, XML, Text gibi herhangi bir formatta veri alışverişi
+  * GET, POST, PUT, DELETE gibi HTTP verb'lerini kullanır
+  * Standart URI yapısı
+
+
+  .center[![](http://i.imgur.com/JQIce5H.png)]
+
+
+---
+  # 5. Rails Modülleri
+
+  * **ActiveRecord** - ORM
+  * **ActiveModel** - Model katmanı
+  * **ActionMailer** - Email işlemleri için
+  * **ActionPack** - Controller katmanı
+  * **ActiveSupport** - Ruby eklentileri
+  * **ActiveJob** - Arkaplan işlemleri için
+  * **ActionView** - View Katmanı
+  * **ActionCable** - WebSockets için
+
+---
+  # 6. Rails Gelenekleri (Conventions)
+
+  Resource: **Post**
+
+  * Model: **Post**
+  * Tablo: **posts**
+  * Controller: **PostsController**
+
 ---
 
 
+  # 7. Rails Hello World Projesi 
 
+  ```ruby
+  rails new hello_world
+
+  cd hello_world
+
+  rails s
+  ```
+  http://localhost:3000
+
+  ```ruby
+    rails g controller pages
+  ```
+  ```ruby
+    def home
+    end
+  ```
+  `app/controllers/pages_controller.rb`
+
+
+---
+  # 7. Rails Hello World Projesi
+  ```ruby
+  <h1>HelloWorld</h1>
+  ```
+  `app/views/pages/home.html.erb`
+
+  ```ruby
+  root to: 'pages#home'
+  ```
+  `config/routes.rb`
+---
+  # 8. Rails Dosya Yapısı
+
+  .center[![](img/dirs.png)]
+
+---
+
+  # Referanslar
+
+  https://github.com/rails/rails
+
+---
     </textarea>
     <script src="https://gnab.github.io/remark/downloads/remark-latest.min.js">
     </script>
     <script>
+    remark.macros.scale = function (percentage) {
+      var url = this;
+      return '<img src="' + url + '" style="width: ' + percentage + '" />';
+    };
       var slideshow = remark.create();
     </script>
   </body>
