@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>05-Active Record Validation</title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+      .remark-inline-code {background: #e7e8e2; }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# Active Record Validation
+
+---
+
+# Active Record Validation
+
+* Validationları kullanarak objelerin veritabanına gitmeden önce doğrulamasını sağlayabiliriz
+* Validationları model dosyasına yazmalıyız
+
+---
+
+# Genel Bakış
+
+Basit bir validation örneği:
+
+```ruby
+class Place < ActiveRecord::Base
+  validates :name, presence: true
+end
+```
+
+Bu örnekte `Place` modelinin `name` alanı için dolu olması zorunluluğu ekliyoruz.
+
+Eğer `name` alanı boş olan bir kayıt eklemeye çalışırsak veritabanına kaydedilmeyecektir.
+
+```ruby
+Place.create(name: "RailsAkademi").valid?  # => true
+Place.create(name: nil).valid? # => false
+```
+
+---
+
+---
+
+  # Referanslar
+
+* http://guides.rubyonrails.org/active_record_validations.html
+
+---
+    </textarea>
+    <script src="https://gnab.github.io/remark/downloads/remark-latest.min.js">
+    </script>
+    <script>
+    remark.macros.scale = function (percentage) {
+      var url = this;
+      return '<img src="' + url + '" style="width: ' + percentage + '" />';
+    };
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
