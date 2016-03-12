@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>04-Active Record Migration</title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+      .remark-inline-code {background: #e7e8e2; }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# Active Record Migration
+
+---
+
+# Active Record Migration
+
+* Migrationlar veritabanını zaman içerisinde değiştirmeyi sağlar
+* Veritabanın şemasında değişiklik yapmak için SQL yazmak yerine Ruby kullanmayı sağlar
+
+---
+
+# Genel Bakış
+
+* Migration veritabanını versiyonlamak gibi düşünülebilir
+* Veritabanı şeması ilk başta boştur, daha sonra migrationları kullanarak yeni tablolar, kolonlar ekleyebiliriz.
+
+---
+
+# Genel Bakış
+
+`Örnek migration dosyası`
+```ruby
+class CreatePlaces < ActiveRecord::Migration
+  def change
+    create_table :places do |t|
+      t.string :name
+      t.string :city
+    end
+  end
+end
+```
+
+`Oluşturduğu SQL Sorgusu`
+```ruby
+CREATE TABLE places (
+   id int(11) NOT NULL,
+   name varchar(255),
+   PRIMARY KEY  (id)
+);
+```
+
+---
+# Migration oluşturmak
+
+* Migrationlar her biri ayrı dosyada olmak üzere `db/migrate` klasörü içerisinde bulunur
+* Her migration dosyasının bir zaman damgası vardır. Örnek: `20160203100000_create_places.rb`
+* Active Record bu zaman damgasını kullanarak migrationların çalışma sırasını belirler
+* Her migration için zaman damgası hesaplamak yerine Rails'in sunduğu generatorı kullanabiliriz
+
+`rails generate migration AddDescriptionToPlaces`
+
+bu komut bize içerisi boş bir migration dosyası oluştaracak
+
+`db/migrate/20160203100000_add_description_to_places.rb`
+```ruby
+class AddDescriptionToPlaces < ActiveRecord::Migration
+  def change
+  end
+end
+```
+
+---
+
+# Migration oluşturmak
+
+Migration dosyasındaki `change` methodununun içerisine gerekli komutları yazarak veritabanı şemasında değişiklik yapabiliriz.
+
+Örneğin migration dosyasının adına uygun olarak `places` tablosuna `description` alanı ekleyelim.
+
+`db/migrate/20160203100000_add_description_to_places.rb`
+```ruby
+class AddDescriptionToPlaces < ActiveRecord::Migration
+  def change
+    add_column :places, :description, :text
+  end
+end
+```
+
+**NOT:** Eğer migrationu oluştururken `AddXXXToYYY` şeklinde bir format kullanırsak ve sonrasında ekleyeceğimiz alanları belirtirsek Rails otomatik olarak migration dosyasını ona göre oluşturacaktır.
+
+`rails generate migration AddDescriptionToPlaces description:text`
+
+---
+
+Rails Model generatorını kullanarak model ile birlikte ona bağlı olan migration dosyasının da oluşturulmasını sağlayabiliriz.
+
+Örneğin şu anki `Place` modelini ve `places` tablosunun migration dosyasını aynı şekilde oluşturmak isteseydik aşağıdaki komutu kullanabilirdik
+
+
+`rails generate model Place name:string city:string description:text`
+
+`db/migrate/20160203100000_add_description_to_places.rb`
+```ruby
+class CreatePlaces < ActiveRecord::Migration
+  def change
+    create_table :places do |t|
+      t.string :name
+      t.string :city
+      t.text :description
+
+      t.timestamps
+    end
+  end
+end
+```
+
+**NOT:** `t.timestamps` satırını Rails otomatik olarak ekler ve tabloya `created_at` ve `updated_at` alanları eklenmesini sağlar.
+
+---
+
+# Alanları(Kolonları) değiştirmek
+
+Migrationları kullanarak tablodaki bir alanın tipini değiştirebiliriz.
+
+Örneğin `places` tablosundaki `description` alanının tipini `string` yapmak istersek aşağıdaki komutu migration dosyamıza yazabiliriz.
+
+```ruby
+change_column :places, :description, :string
+```
+
+**NOT:** `t.timestamps` satırını Rails otomatik olarak ekler ve tabloya `created_at` ve `updated_at` alanları eklenmesini sağlar.
+
+---
+
+**Diğer Migration methodları**
+
+* add_column
+* add_foreign_key
+* add_index
+* add_reference
+* add_timestamps
+* change_column_default (must supply a :from and :to option)
+* change_column_null
+* create_join_table
+* create_table
+* disable_extension
+* drop_join_table
+* drop_table (must supply a block)
+* enable_extension
+* remove_column (must supply a type)
+* remove_foreign_key (must supply a second table)
+* remove_index
+* remove_reference
+* remove_timestamps
+* rename_column
+* rename_index
+* rename_table
+---
+
+# Migrationları Çalıştırmak
+
+`rake db:migrate`
+
+komutunu kullanarak sırasıyla daha önce çalıştırılmamış olan migrationların çalışmasını sağlayabiliriz.
+
+# Migrationları Geriye Almak
+
+`rake db:rollback`
+
+komutunu kullanarak son çalışan migrationı geriye alabiliriz.
+
+---
+
+# schema.rb Dosyası
+
+`db/schema.rb` dosyası veritabanının anlık görüntüsünü tutar. Bu dosyada değişiklik yapmanız veritabanında bir şey değiştirmeyecektir.
+
+---
+
+  # Referanslar
+
+* http://edgeguides.rubyonrails.org/active_record_migrations.html
+
+---
+    </textarea>
+    <script src="https://gnab.github.io/remark/downloads/remark-latest.min.js">
+    </script>
+    <script>
+    remark.macros.scale = function (percentage) {
+      var url = this;
+      return '<img src="' + url + '" style="width: ' + percentage + '" />';
+    };
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
