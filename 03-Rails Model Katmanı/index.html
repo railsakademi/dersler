@@ -14,6 +14,7 @@
         font-weight: normal;
       }
       .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+      .remark-inline-code {background: #e7e8e2; }
     </style>
   </head>
   <body>
@@ -37,8 +38,169 @@ class: center, middle
 
 ---
 
+# 1. Active Record Temelleri
+
+## Active Record Nedir?
+
+* Rails için MVC'deki M'dir yani Model katmanıdır.
+* Bir ORM'dir
+* Martin Fowler tarafından ortaya atılmış bir kalıptır[1]
+
+---
+
+# 1. Active Record Temelleri
+
+## ORM Nedir?
+
+* ORM, veritabanında oluşturulan her tabloya karşılık uygulama tarafında bir nesne oluşturma işidir[2]
+
+**Örnek olarak;** Eğer varitabanında `places` adında bir tablo varsa buna karşılık olarak uygulama katmanında(Rails uygulamasında) `Place` adında bir model olması gerekir.
+
+
+---
+
+# 1. Active Record Temelleri
+
+## ORM olarak Active Record'un sağladıkları
+
+* Modelleri ve dataları sağlar
+* Modeller arasındaki ilişkileri sağlar
+* Modeller veritabanına kaydedilmeden önce doğrulamaları sağlar
+* Veritabanı işlemlerini Object Oriented olarak yapılmasını sağlar
+
+---
+
+# 1. Active Record Temelleri
+
+## İsimlendirme Gelenekleri
+
+* Model isimleri tekil olmalıdır(`User, Place, Comment, Person`)
+* Active Record model isminin çoğulunu veritabanındaki tablo olarak kullanır(`users, places, comments, people`)
+
+---
+
+# Active Record Modelleri Oluşturmak
+
+`Place` adında yeni bir model oluşturalım
+
+`app/models/place.rb`
+```ruby
+class Place < ActiveRecord::Base
+
+end
+```
+
+Ve veritabanında `places` adında bir tablo oluşturalım
+
+`SQL Sorgusu`
+```ruby
+CREATE TABLE places (
+   id int(11) NOT NULL,
+   name varchar(255),
+   PRIMARY KEY  (id)
+);
+```
+---
+
+# 1. Active Record Temelleri
+
+`places` tablosundaki `name` ve `id` alanının `Place` modelinde otomatik olarak oluştuğunu görebiliriz.
+
+Active Record bizim için veritabanındaki alanları modelimize tanımlıyor.
+
+`rails console`
+```ruby
+p = Place.new
+p.name = "RailsAkademi"
+puts p.name
+p.save
+```
+
+---
+
+# 1. Active Record Temelleri
+
+`places` tablosuna `city` adında yeni bir alan ekleyelim
+
+`SQL Sorgusu`
+```ruby
+ALTER TABLE places
+ADD COLUMN city varchar(255)
+```
+
+Yeni bir `Place` model nesnesi oluşturduğumuzda yeni eklediğimiz `city` alanının modelimize tanımlı olduğunu görebiliriz.
+
+`rails console`
+```ruby
+p = Place.new
+```
+
+---
+
+# Active Record ile CRUD
+
+* **C** - Create - Oluşturmak
+* **R** - Read - Okumak
+* **U** - Update - Güncellemek
+* **D** - Delete - Silmek
+
+---
+
+# Create
+
+`rails console`
+```ruby
+p = Place.create(name: "RailsAkademi", city: "Antalya")
+
+```
+
+---
+
+# Read
+
+`rails console`
+```ruby
+p = Place.first # ilk kaydı getir
+p = Place.find(5) # idsi 1 olan kaydı getir
+p = Place.find_by(name: "RailsAkademi") # adı "RailsAkademi" olan kaydı getir
+places = Place.all # tüm kayıtları getir
+places = Place.where(city: "Antalya").order(name: :desc) # şehri Antalya olan kayıtları isme göre sıralayarak getir
+```
+
+---
+
+# Update
+
+`rails console`
+```ruby
+p = Place.first
+p.name = "Starbucks"
+p.save
+```
+
+```ruby
+p = Place.first
+p.update(name: "Starbucks")
+```
+
+---
+
+# Delete
+
+`rails console`
+```ruby
+p = Place.first
+p.destroy
+```
+
+---
+
   # Referanslar
 
+[1] https://en.wikipedia.org/wiki/Active_record_pattern
+[2] http://www.ugurkizmaz.com/YazilimMakale-615-ORM--Object-Relational-Mapping--Nedir-.aspx
+* http://sqlitebrowser.org/
+* https://apps.ubuntu.com/cat/applications/sqlitebrowser/
 
 ---
     </textarea>
