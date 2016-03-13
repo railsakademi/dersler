@@ -37,8 +37,53 @@ class: center, middle
 
 ---
 
-# Tarıyıcı(Browser)
+# Tarayıcı(Browser)
 
+* Tarayıcınıza bir URL girdiğiniz zaman(**Örn.:** http://www.railsakademi.com/dersler), tarayıcı bunu sizin için bir HTTP mesajına çevirir ve sunucuya gönderir.
+* Sunucu bu isteği işler ve size uygun bir cevap verir.
+
+![](https://www.ntu.edu.sg/home/ehchua/programming/webprogramming/images/HTTP_Steps.png)
+
+---
+
+# URL(Uniform Resource Locator)
+
+* Web üzerindeki bir kaynağı özgün(unique) olarak tanımlamayı sağlar.
+
+`protocol://hostname:port/path-and-file-name`
+
+Bir URL 4 parçadan oluşur:
+
+1. Protokol: İstemci ve Sunucu arasındaki prokol, HTTP, FTP veya telnet olabilir.
+2. Hostname: Sunucunun adresi. Bir domain(**railsakademi.com**) veya ip adresi(**192.120.13.50**) olabilir.
+3. Port: Sunucunun kullandığı port numarası. 80(HTTP), 20(FTP)
+4. Path-and-file-name: Sunucu üzerinde istenen kaynağın adı ve yolu
+
+---
+
+# HTTP Protokolü
+
+Tarayıcınıza `http://railsakademi.github.io/dersler/index.html` yazdığınız zaman, tarayıcınız bunu sizin için aşağıdaki gibi bir HTTP mesajına çevirir.
+
+```html
+GET http://railsakademi.github.io/dersler/index.html
+Host: railsakademi.github.io
+Accept: text/html,application/xhtml+xml,application/xml
+Accept-Language: en-us
+Accept-Encoding: gzip, deflate
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.103 Safari/537.36
+```
+Sunucunun cevabı;
+```html
+HTTP/1.1 200 OK
+Date: Sun, 13 Mar 2016 22:47:38 GMT
+Server: Apache/2.2.14 (Win32)
+Content-Length: 44
+Connection: close
+Content-Type: text/html
+
+<html><body><h1>It works!</h1></body></html>
+```
 
 ---
 
