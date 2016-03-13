@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>07 - HTTP 101</title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+      .remark-inline-code {background: #e7e8e2; }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# HTTP 101
+
+---
+
+# HTTP - The Hypertext Transfer Protocol
+
+* HTTP asimetrik istek-cevap protokolüdur.
+* Bir HTTP istemcisi HTTP sunucusuna bir istek mesajı gönderir
+* Sunucu cevap olarak bir mesaj döndürür.
+* HTTP durumsuz bir protokoldür, tüm HTTP istekleri birbirinden bağımsızdır.
+
+![](https://www.ntu.edu.sg/home/ehchua/programming/webprogramming/images/HTTP.png)
+
+---
+
+# Tarıyıcı(Browser)
+
+
+---
+
+  # Referanslar
+
+* https://www.ntu.edu.sg/home/ehchua/programming/webprogramming/HTTP_Basics.html
+
+---
+    </textarea>
+    <script src="https://gnab.github.io/remark/downloads/remark-latest.min.js">
+    </script>
+    <script>
+    remark.macros.scale = function (percentage) {
+      var url = this;
+      return '<img src="' + url + '" style="width: ' + percentage + '" />';
+    };
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
