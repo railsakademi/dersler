@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>06-Rails Controller Katmanı</title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+      .remark-inline-code {background: #e7e8e2; }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# Rails Controller Katmanı
+
+---
+
+# Rails Controller Katmanı - Action Controller
+
+* Action Controller MVC'deki C'dir
+* Router isteği hangi controller'ın karşılayacağını belirler.
+* Controller yapılan isteği anlamlandırır ve bir çıktı üretir.
+* Controller, Model ve View katmanı arasındaki katmandır. Model datasının View'de görüntülenmesini veya güncellenebilmesini sağlar.
+
+---
+
+# Method ve Action
+
+* Controller'lar aslında `ApplicationController`'dan türetilmiş bir Ruby sınıfıdır.
+* Controller'ın methodlarına *action* adı verilir.
+* Rails isteği hangi controllerın işleyeceğini belirledikten sonra o controller'ın bir nesnesini yaratır ve onun üzerinde gerekli methodu çağırır
+
+
+---
+
+# Method ve Action
+
+* Controller'lar aslında `ApplicationController`'dan türetilmiş bir Ruby sınıfıdır.
+* Controller'ın methodlarına *action* adı verilir.
+* Rails isteği hangi controllerın işleyeceğini belirledikten sonra o controller'ın bir nesnesini yaratır ve onun üzerinde gerekli methodu çağırır
+
+`/places/new`
+```ruby
+class PlacesController < ApplicationController
+  def new
+
+  end
+end
+```
+
+---
+
+  # Referanslar
+
+* http://guides.rubyonrails.org/action_controller_overview.html
+
+---
+    </textarea>
+    <script src="https://gnab.github.io/remark/downloads/remark-latest.min.js">
+    </script>
+    <script>
+    remark.macros.scale = function (percentage) {
+      var url = this;
+      return '<img src="' + url + '" style="width: ' + percentage + '" />';
+    };
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
