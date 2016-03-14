@@ -15,6 +15,12 @@
       }
       .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
       .remark-inline-code {background: #e7e8e2; }
+
+      .small{
+        font-size: 15px;
+        margin-left: -50px;
+        margin-right: -50px;
+      }
     </style>
   </head>
   <body>
@@ -58,6 +64,16 @@ Bir URL 4 parçadan oluşur:
 3. Port: Sunucunun kullandığı port numarası. 80(HTTP), 20(FTP)
 4. Path-and-file-name: Sunucu üzerinde istenen kaynağın adı ve yolu
 
+---
+
+# HTTP Methodları
+
+.small[
+* **GET** - sunucudan veri almak için kullanılmalıdır, ön belleğe alınabilir, 2K'dan daha küçük olmalıdır, binary veri desteklemez
+* **POST** - sunucuya veri göndermek için kullanılmalıdır, ön belleğe alınamaz, binary veri destekler
+* **PUT** - POST ile aynı özelliklere sahiptir ancak var olan bir veriyi güncellemek için kullanılmalıdır
+* **DELETE** - GET ile aynı özelliklere sahiptir ancak silme işlemi için kullanılmalıdır 
+]
 ---
 
 # HTTP Protokolü
