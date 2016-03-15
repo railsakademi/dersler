@@ -21,6 +21,10 @@
         margin-left: -50px;
         margin-right: -50px;
       }
+
+      .shrink-image img{
+        width: 50%;
+      }
     </style>
   </head>
   <body>
@@ -72,7 +76,7 @@ Bir URL 4 parçadan oluşur:
 * **GET** - sunucudan veri almak için kullanılmalıdır, ön belleğe alınabilir, 2K'dan daha küçük olmalıdır, binary veri desteklemez
 * **POST** - sunucuya veri göndermek için kullanılmalıdır, ön belleğe alınamaz, binary veri destekler
 * **PUT** - POST ile aynı özelliklere sahiptir ancak var olan bir veriyi güncellemek için kullanılmalıdır
-* **DELETE** - GET ile aynı özelliklere sahiptir ancak silme işlemi için kullanılmalıdır 
+* **DELETE** - GET ile aynı özelliklere sahiptir ancak silme işlemi için kullanılmalıdır
 ]
 ---
 
@@ -99,6 +103,87 @@ Content-Type: text/html
 
 <html><body><h1>It works!</h1></body></html>
 ```
+
+---
+
+# HTTP İstek(Request) Mesajı
+
+.small[
+3 kısımdan oluşur
+
+* **İstek satırı** HTTP Methodu, URL ve HTTP protokol versiyonunu belirtir(HTTP/1.0 and HTTP/1.1)
+* **Header**(opsiyonel) Key: value şeklinde değerleri tutar
+* **Body**(opsiyonel) İsteğin gövdesi, key value veya binary data olabilir
+]
+.center[
+.shrink-image[![](https://www.ntu.edu.sg/home/ehchua/programming/webprogramming/images/HTTP_RequestMessage.png)]
+]
+
+```html
+GET http://railsakademi.github.io/dersler/index.html
+Host: railsakademi.github.io
+Accept: text/html,application/xhtml+xml,application/xml
+Accept-Language: en-us
+Accept-Encoding: gzip, deflate
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.103 Safari/537.36
+```
+
+---
+
+# HTTP Cevap(Response) Mesajı
+
+.small[
+3 kısımdan oluşur
+
+* **Durum satırı** HTTP versiyonu, durum kodu ve durumun kısa açıklaması
+* **Header**(opsiyonel) Key: value şeklinde içeriğin formatı, uzunluğu gibi değerleri tutar
+* **Body**(opsiyonel) Mesajın gövdesi, istenen kaynağın datasını içerir.(HTML, JSON, XML vs)
+]
+.center[
+.shrink-image[![](https://www.ntu.edu.sg/home/ehchua/programming/webprogramming/images/HTTP_ResponseMessage.png)]
+]
+
+```html
+HTTP/1.1 200 OK
+Date: Sun, 13 Mar 2016 22:47:38 GMT
+Server: Apache/2.2.14 (Win32)
+Content-Length: 44
+Connection: close
+Content-Type: text/html
+
+<html><body><h1>It works!</h1></body></html>
+```
+
+---
+
+# HTTP POST İsteği
+
+Sunucuya veri göndermek için kullanılır. Veriler bir formdan alınan key, value değerleri olabilir ya da resim, pdf gibi binary data olabilir.
+
+.center[
+.shrink-image[![](https://www.ntu.edu.sg/home/ehchua/programming/webprogramming/images/HTTP_ResponseMessage.png)]
+]
+
+```html
+POST http://www.railsakademi.com/places
+Host: railsakademi.com
+Accept: text/html,application/xhtml+xml,application/xml
+Accept-Language: en-us
+Accept-Encoding: gzip, deflate
+Content-Type: application/x-www-form-urlencoded
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.103 Safari/537.36
+
+name=Starbucks&city=Antalya
+```
+
+---
+
+# HTTP Durum Kodları
+
+* **200 OK** - istek başarılı
+* **404 Not Found** - istenen sayfa bulunamadı
+* **500 Internal Server Error** - sunucuda bir hata oluştu
+* **403 Forbidden** - istenen sayfaya erişim engellendi
 
 ---
 
