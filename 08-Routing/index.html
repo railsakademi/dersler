@@ -68,6 +68,19 @@ Resource routing bir resource(model) için CRUD(`index, show, new, edit, create,
 
 ---
 
+# Namespace
+
+* `namespace`i kullanarak routeları namespace içerisinde tanımlayabilirsiniz.
+* Eğer namespaceli bi route tanımlarsanız, controllerlar da aynı namespace içerisinde olmalı
+
+```ruby
+namespace :admin do
+  resources :places
+en
+```
+
+---
+
   # Referanslar
 
 * http://guides.rubyonrails.org/action_controller_overview.html
