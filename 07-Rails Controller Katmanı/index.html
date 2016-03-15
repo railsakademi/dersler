@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>07-Rails Controller Katmanı</title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+      .remark-inline-code {background: #e7e8e2; }
+
+      .small{
+        font-size: 15px;
+        margin-left: -50px;
+        margin-right: -50px;
+      }
+
+      .shrink-image img{
+        width: 50%;
+      }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# Rails Controller Katmanı
+
+---
+
+# Rails Controller Katmanı - Action Controller
+
+* Action Controller MVC'deki C'dir
+* Router isteği hangi controller'ın karşılayacağını belirler.
+* Controller yapılan isteği anlamlandırır ve bir çıktı üretir.
+* Controller, Model ve View katmanı arasındaki katmandır. Model datasının View'de görüntülenmesini veya güncellenebilmesini sağlar.
+
+---
+
+# Method ve Action
+
+* Controller'lar aslında `ApplicationController`'dan türetilmiş bir Ruby sınıfıdır.
+* Controller'ın methodlarına *action* adı verilir.
+* Rails isteği hangi controllerın işleyeceğini belirledikten sonra o controller'ın bir nesnesini yaratır ve onun üzerinde gerekli methodu çağırır
+
+
+---
+
+# Method ve Action
+
+* Controller'lar aslında `ApplicationController`'dan türetilmiş bir Ruby sınıfıdır.
+* Controller'ın methodlarına *action* adı verilir.
+* Rails isteği hangi controllerın işleyeceğini belirledikten sonra o controller'ın bir nesnesini yaratır ve onun üzerinde gerekli methodu çağırır
+
+`/places/new`
+```ruby
+class PlacesController < ApplicationController
+  def new
+
+  end
+end
+```
+
+---
+
+# Parametreler
+
+.small[
+* Kullanıcıların gönderdiği parametrelere controller actionları içerisinde erişebilirsiniz.
+* Web uygulamalarında 2 farklı parametre vardır, Query String(URL'deki ?'den sonraki herşey) ve POST verisi
+* Rails'te iki parametreye de `params` hashi içerisinden erişebilir.
+]
+
+```ruby
+class PlacesController < ApplicationController
+
+  # places: /places?status=open
+  def index
+    if params[:status] == "open"
+      @places = Place.open
+    else
+      @places = Place.closed
+    end
+  end
+
+  # /places
+  def create
+    @place = Place.new(params[:place])
+    if @place.save
+      redirect_to @place.save
+    else
+      render "new"
+    end
+  end
+end
+```
+
+---
+
+# Session
+
+* Session değişkenlerine `session` kullanılarak hash gibi key,value olarak erişilebilir
+
+```ruby
+class ApplicationController < ActionController::Base
+
+  private
+
+  def current_user
+    @_current_user ||= session[:current_user_id] &&
+      User.find_by(id: session[:current_user_id])
+  end
+end
+```
+
+```ruby
+class LoginsController < ApplicationController
+  def create
+    if user = User.authenticate(params[:username], params[:password])
+      session[:current_user_id] = user.id
+      redirect_to root_url
+    end
+  end
+end
+```
+
+---
+
+# Flash
+
+* HTTP Requestleri arasında hata mesajları gibi değerleri geçirmek için kullanılır
+* Flash'lar session içerisinde her requestte yenilenir
+* Hash gibi kullanılır
+
+```ruby
+class LoginsController < ApplicationController
+  def destroy
+    session[:current_user_id] = nil
+    flash[:notice] = "You have successfully logged out."
+    redirect_to root_url
+  end
+end
+```
+
+```html
+<html>
+  <!-- <head/> -->
+  <body>
+    <%= flash[:notice] %>
+
+    <!-- more content -->
+  </body>
+</html>
+```
+
+---
+
+# Flash
+
+* redirect_to methoduna parametre olarak da geçirilebilir
+
+```ruby
+class LoginsController < ApplicationController
+  def destroy
+    session[:current_user_id] = nil
+    redirect_to root_url, notice: "You have successfully logged out."
+  end
+end
+```
+
+```html
+<html>
+  <!-- <head/> -->
+  <body>
+    <%= flash[:notice] %>
+
+    <!-- more content -->
+  </body>
+</html>
+```
+
+---
+
+# Filtreler(Filter)
+
+* Filtreler bir controller actionı öncesinde veya sonrasında çalışır.
+* `before_action` veya `after_action` olarak kullanılır.
+
+**Örnek:** `before_action :method_adı`
+
+```ruby
+class ApplicationController < ActionController::Base
+  before_action :require_login
+
+  private
+
+  def require_login
+    unless logged_in?
+      flash[:error] = "You must be logged in to access this section"
+      redirect_to new_login_url # halts request cycle
+    end
+  end
+end
+```
+
+Yukarıdaki kullanım ile birlikte tüm actionlardan önce `require_login` methodu çalıştırılacak
+
+---
+
+# Filtreler(Filter)
+
+### Filtreleri sadece belli actionlarda çalışmasını da sağlayabiliriz.
+
+**Örnek:** `before_action :method_adı, only: [:new, :create]`
+
+
+Yukarıdaki kullanım ile birlikte sadece `new` ve `create` actionlardan önce `require_login` methodu çalıştırılacak
+
+### Filtreleri sadece belli actionlar haricinde çalışmasını da sağlayabiliriz.
+
+**Örnek:** `before_action :method_adı, except: [:index, :show]`
+
+
+Yukarıdaki kullanım ile birlikte `index` ve `show` harici tüm actionlardan önce `require_login` methodu çalıştırılacak
+
+---
+
+  # Referanslar
+
+* http://guides.rubyonrails.org/action_controller_overview.html
+
+---
+    </textarea>
+    <script src="https://gnab.github.io/remark/downloads/remark-latest.min.js">
+    </script>
+    <script>
+    remark.macros.scale = function (percentage) {
+      var url = this;
+      return '<img src="' + url + '" style="width: ' + percentage + '" />';
+    };
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>

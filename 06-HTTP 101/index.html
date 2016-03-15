@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>07 - HTTP 101</title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+      .remark-inline-code {background: #e7e8e2; }
+
+      .small{
+        font-size: 15px;
+        margin-left: -50px;
+        margin-right: -50px;
+      }
+
+      .shrink-image img{
+        width: 50%;
+      }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# HTTP 101
+
+---
+
+# HTTP - The Hypertext Transfer Protocol
+
+* HTTP durumsuz bir protokoldür, tüm HTTP istekleri birbirinden bağımsızdır.
+* Bir HTTP istemcisi HTTP sunucusuna bir istek mesajı gönderir,
+* Sunucu cevap olarak bir mesaj döndürür.
+
+![](https://www.ntu.edu.sg/home/ehchua/programming/webprogramming/images/HTTP.png)
+
+---
+
+# Tarayıcı(Browser)
+
+* Tarayıcınıza bir URL girdiğiniz zaman(**Örn.:** http://www.railsakademi.com/dersler), tarayıcı bunu sizin için bir HTTP mesajına çevirir ve sunucuya gönderir.
+* Sunucu bu isteği işler ve size uygun bir cevap verir.
+
+![](https://www.ntu.edu.sg/home/ehchua/programming/webprogramming/images/HTTP_Steps.png)
+
+---
+
+# URL(Uniform Resource Locator)
+
+* Web üzerindeki bir kaynağı özgün(unique) olarak tanımlamayı sağlar.
+
+`protocol://hostname:port/path-and-file-name`
+
+Bir URL 4 parçadan oluşur:
+
+1. Protokol: İstemci ve Sunucu arasındaki prokol, HTTP, FTP veya telnet olabilir.
+2. Hostname: Sunucunun adresi. Bir domain(**railsakademi.com**) veya ip adresi(**192.120.13.50**) olabilir.
+3. Port: Sunucunun kullandığı port numarası. 80(HTTP), 20(FTP)
+4. Path-and-file-name: Sunucu üzerinde istenen kaynağın adı ve yolu
+
+---
+
+# HTTP Methodları
+
+.small[
+* **GET** - sunucudan veri almak için kullanılmalıdır, ön belleğe alınabilir, 2K'dan daha küçük olmalıdır, binary veri desteklemez
+* **POST** - sunucuya veri göndermek için kullanılmalıdır, ön belleğe alınamaz, binary veri destekler
+* **PUT** - POST ile aynı özelliklere sahiptir ancak var olan bir veriyi güncellemek için kullanılmalıdır
+* **DELETE** - GET ile aynı özelliklere sahiptir ancak silme işlemi için kullanılmalıdır
+]
+---
+
+# HTTP Protokolü
+
+Tarayıcınıza `http://railsakademi.github.io/dersler/index.html` yazdığınız zaman, tarayıcınız bunu sizin için aşağıdaki gibi bir HTTP mesajına çevirir.
+
+```html
+GET http://railsakademi.github.io/dersler/index.html
+Host: railsakademi.github.io
+Accept: text/html,application/xhtml+xml,application/xml
+Accept-Language: en-us
+Accept-Encoding: gzip, deflate
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.103 Safari/537.36
+```
+Sunucunun cevabı;
+```html
+HTTP/1.1 200 OK
+Date: Sun, 13 Mar 2016 22:47:38 GMT
+Server: Apache/2.2.14 (Win32)
+Content-Length: 44
+Connection: close
+Content-Type: text/html
+
+<html><body><h1>It works!</h1></body></html>
+```
+
+---
+
+# HTTP İstek(Request) Mesajı
+
+.small[
+3 kısımdan oluşur
+
+* **İstek satırı** HTTP Methodu, URL ve HTTP protokol versiyonunu belirtir(HTTP/1.0 and HTTP/1.1)
+* **Header**(opsiyonel) Key: value şeklinde değerleri tutar
+* **Body**(opsiyonel) İsteğin gövdesi, key value veya binary data olabilir
+]
+.center[
+.shrink-image[![](https://www.ntu.edu.sg/home/ehchua/programming/webprogramming/images/HTTP_RequestMessage.png)]
+]
+
+```html
+GET http://railsakademi.github.io/dersler/index.html
+Host: railsakademi.github.io
+Accept: text/html,application/xhtml+xml,application/xml
+Accept-Language: en-us
+Accept-Encoding: gzip, deflate
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.103 Safari/537.36
+```
+
+---
+
+# HTTP Cevap(Response) Mesajı
+
+.small[
+3 kısımdan oluşur
+
+* **Durum satırı** HTTP versiyonu, durum kodu ve durumun kısa açıklaması
+* **Header**(opsiyonel) Key: value şeklinde içeriğin formatı, uzunluğu gibi değerleri tutar
+* **Body**(opsiyonel) Mesajın gövdesi, istenen kaynağın datasını içerir.(HTML, JSON, XML vs)
+]
+.center[
+.shrink-image[![](https://www.ntu.edu.sg/home/ehchua/programming/webprogramming/images/HTTP_ResponseMessage.png)]
+]
+
+```html
+HTTP/1.1 200 OK
+Date: Sun, 13 Mar 2016 22:47:38 GMT
+Server: Apache/2.2.14 (Win32)
+Content-Length: 44
+Connection: close
+Content-Type: text/html
+
+<html><body><h1>It works!</h1></body></html>
+```
+
+---
+
+# HTTP POST İsteği
+
+Sunucuya veri göndermek için kullanılır. Veriler bir formdan alınan key, value değerleri olabilir ya da resim, pdf gibi binary data olabilir.
+
+.center[
+.shrink-image[![](https://www.ntu.edu.sg/home/ehchua/programming/webprogramming/images/HTTP_ResponseMessage.png)]
+]
+
+```html
+POST http://www.railsakademi.com/places
+Host: railsakademi.com
+Accept: text/html,application/xhtml+xml,application/xml
+Accept-Language: en-us
+Accept-Encoding: gzip, deflate
+Content-Type: application/x-www-form-urlencoded
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.103 Safari/537.36
+
+name=Starbucks&city=Antalya
+```
+
+---
+
+# HTTP Durum Kodları
+
+* **200 OK** - istek başarılı
+* **404 Not Found** - istenen sayfa bulunamadı
+* **500 Internal Server Error** - sunucuda bir hata oluştu
+* **403 Forbidden** - istenen sayfaya erişim engellendi
+
+---
+
+  # Referanslar
+
+* https://www.ntu.edu.sg/home/ehchua/programming/webprogramming/HTTP_Basics.html
+
+---
+    </textarea>
+    <script src="https://gnab.github.io/remark/downloads/remark-latest.min.js">
+    </script>
+    <script>
+    remark.macros.scale = function (percentage) {
+      var url = this;
+      return '<img src="' + url + '" style="width: ' + percentage + '" />';
+    };
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
