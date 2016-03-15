@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>08-Routing</title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+      .remark-inline-code {background: #e7e8e2; }
+
+      .small{
+        font-size: 15px;
+        margin-left: -50px;
+        margin-right: -50px;
+      }
+
+      .shrink-image img{
+        width: 50%;
+      }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# Routing (Yönlendirme)
+
+---
+
+# Rails Router(Yönlendirici)
+
+* Gelen isteği URL'e göre hangi controller actionına yönlendireceğini belirler.
+* Dinamik olarak path'leri oluşturarak view ve controller katmanında hard-coded string yazmayı önler(**places_path** vb)
+
+---
+
+# URL'i Koda Bağlamak
+
+Rails uygulaması aşağıdaki gibi bir istek aldığında
+```html
+GET /places/17
+```
+Router'a bu isteği hangi controller actionına yönlendireceğini sorar. Eğer routes.rb dosyasında aşağıdaki gibi bir route tanımlandıysa;
+
+```ruby
+get '/places/:id', to: 'places#show'
+```
+
+Gelen isteği `PlacesController`ın `show` actionına yönlendirir.
+
+---
+
+# Resource Routing
+
+Resource routing bir resource(model) için CRUD(`index, show, new, edit, create, update, destroy`) routelarını kolayca oluşturmayı sağlar.
+
+Örneğin routes.rb içerisinde `resources :places` yazarsak, bu bizim için `places` üzerinde 7 tane route oluşturacak.
+
+
+---
+
+  # Referanslar
+
+* http://guides.rubyonrails.org/action_controller_overview.html
+
+---
+    </textarea>
+    <script src="https://gnab.github.io/remark/downloads/remark-latest.min.js">
+    </script>
+    <script>
+    remark.macros.scale = function (percentage) {
+      var url = this;
+      return '<img src="' + url + '" style="width: ' + percentage + '" />';
+    };
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
