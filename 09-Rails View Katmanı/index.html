@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>09 - Rails View Katmanı</title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+      .remark-inline-code {background: #e7e8e2; }
+
+      .small{
+        font-size: 15px;
+        margin-left: -50px;
+        margin-right: -50px;
+      }
+
+      .shrink-image img{
+        width: 50%;
+      }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# Rails View Katmanı
+
+---
+
+# Response(Cevap) Oluşturmak
+
+Controller katmanında HTTP response mesajı oluşturmak için 2 yöntem vardır,
+
+* `render` kullanarak bir HTML, JSON, XML formatında bir mesaj oluşturmak
+* `redirect_to` kullanarak HTTP redirect kodu göndermek
+
+---
+
+# Render
+
+* Controller actionlarında Rails'ın conventionı varsayılan olarak aynı isimdeki view dosyasını render etmektir. `app/views/controller_adı/action_adı.html.erb`
+
+**Örnek**
+
+```ruby
+class PlacesController < ApplicationController
+  def show
+
+  end
+end
+```
+
+`PlacesController`ın `show` actionı varsayılan olarak `app/views/places/show.html.erb` dosyasını render eder.
+
+---
+
+# Başka bir view render etmek
+
+
+```ruby
+class PlacesController < ApplicationController
+  ...
+  def update
+    @place = Place.find(params[:id])
+
+    if @place.update(place_params)
+      redirect_to place_path(place)
+    else
+      render "edit"
+    end
+  end
+  ...
+end
+```
+
+---
+
+# Sadece string render etmek
+
+
+```ruby
+render plain: "OK"
+```
+
+---
+
+# JSON render etmek
+
+
+```ruby
+class PlacesController < ApplicationController
+  ...
+  def show
+    @place = Place.find(params[:id])
+
+    render json: @place
+  end
+  ...
+end
+```
+
+Rails render ederken `@place` objesi üzerinde otomatik olarak `to_json` methodunu çağıracağı için sizin çağırmanıza gerek yoktur.
+
+`to_json` methodunu ActiveRecord sağlar.
+
+Aynı şekilde XML olarak da render edebiliriz.
+
+```ruby
+render xml: @place`
+```
+---
+
+# Layout değiştirmek
+
+Render ederken varsayılan layout dosyasından farklı bir layout kullanmak istiyorsak `layout` parametresini kullanabiliriz.
+
+```ruby
+render layout: "admin_layout"
+```
+
+Ya da layout kullanmak istemeyebiliriz,
+
+```ruby
+render layout: false
+```
+
+---
+
+# Durum kodu belirtmek
+
+Rails otomatik olarak HTTP cevaplarını 200 kodu kullanarak oluşturur. Render ederken bunu değiştirebiliriz.
+
+```ruby
+render status: 500
+```
+
+```ruby
+render status: :forbidden
+```
+
+---
+
+# Controller için layout seçeneği
+
+Controller içerisinde tüm actionlarda geçerli olması için layout dosyası belirtebiliriz.
+
+```ruby
+class PlacesController < ApplicationController
+  layout "place_layout"
+
+  ...
+end
+```
+
+Bu seçenek ile bu controller içerisindeki tüm actionlar layout olarak `
+app/views/layouts/place_layout.html.erb` dosyasını kullanacak.
+
+---
+
+# Controller için layout seçeneği
+
+Controller içerisindeki `layout` seçeneği o controllerdan extend edilen tüm controllerlar için geçerlidir.
+
+```ruby
+class AdminController < ApplicationController
+  layout "admin_layout"
+  ...
+end
+
+class PlacesController < AdminController
+  ...
+end
+
+class PagesController < AdminController
+  ...
+end
+```
+
+`AdminController` layout olarak `admin_layout` dosyasını tanımlıyor ve ondan extend edilen `PlacesController` ve `PagesController` controllerları layout olarak yine aynı dosyayı kullanacak.
+
+
+---
+
+# Controller için layout seçeneği
+
+`layout` seçeneği için `only` veya `except` parametrelerini kullanabiliriz.
+
+```ruby
+class AdminController < ApplicationController
+  layout "admin_layout", only: [:create]
+  ...
+end
+
+```
+
+---
+
+# redirect_to kullanımı
+
+`redirect_to` methodunu kullanarak kullanıcıları controller içerisinde başka bir sayfaya yönlendirebiliriz. Örneğin bir formu başarıyla kaydettikten sonra gerekli sayfaya yönlendirmek.
+
+
+````ruby
+redirect_to root_path
+redirect_to places_path, notice: "Mekan başarıyla kaydedildi"
+```
+
+---
+
+# Asset Tag Helperları
+
+View içerisinde javascript, css, image, video gibi assetleri ekleyebilmek için Rails helper methodları sağlar.
+
+* javascript_include_tag
+* stylesheet_link_tag
+* image_tag
+* video_tag
+* audio_tag
+
+---
+
+# Asset Tag Helperları
+
+```ruby
+<%= javascript_include_tag "main" %>
+```
+
+Kodu aşağıdaki HTML kodunu üretecektir;
+
+```html
+<script src='/assets/main.js'></script>
+```
+
+---
+
+# Asset Tag Helperları
+
+```ruby
+<%= image_tag "header.png" %>
+<%= image_tag "header.png", alt: "Home" %>
+<%= image_tag "header.png", class: "nav_bar" %>
+```
+
+---
+
+# yield Kullanımı
+
+Layout dosyaları içerisindeki `yield`, view dosyalarından gelen içeriğin nereye ekleneceğini belirtir.
+
+`application.html.erb`
+```html
+&lt;html&gt;
+  &lt;head&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;%= yield %&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+```
+
+`places/show.html.erb`
+```html
+<h1><%= @place.name %></h1>
+```
+
+---
+
+# yield Kullanımı
+
+Çıktısı;
+
+`application.html.erb`
+```html
+&lt;html&gt;
+  &lt;head&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    <h1>Starbucks</h1>
+  &lt;/body&gt;
+&lt;/html&gt;
+```
+
+---
+
+Layout içerisinde birden fazla `yield` kullanabiliriz.;
+
+`application.html.erb`
+```html
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;
+      &lt;%= yield :title %&gt;
+    &lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;%= yield %&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+```
+
+`yield :title` kullanarak view dosyalarımızda buraya gelecek içeriği belirleyebiliriz.
+
+`places/show.html.erb`
+
+```html
+<% content_for :title do %>
+  <%= @place.name %> Hakkında
+<% end %>
+
+<h1><%= @place.name %></h1>
+```
+
+---
+
+# Partial Kullanımı
+
+Partial kullanarak view dosyalarını parçalara ayırabiliriz. Böylece kodun daha yönetilebilir olmasını sağlar, kod tekrarlarının önüne geçebiliriz.
+
+Partial dosyalarını, template(`show.html.erb`, `index.html.erb`) dosyalarından ayırmak için dosya isimleri alt çizgi(`_`) ile başlar.
+
+Partial dosyalarını `render` methodunu kullanarak template içerisine ekleyebiliriz.
+
+```ruby
+<%= render "menu" %> # _menu.html.erb dosyasını render eder
+```
+
+---
+
+# Partial Kullanımı
+
+Partial render ederken, partial dosyası içerisinde kullanabilmek için yerel değişkenler tanımlayabiliriz.
+
+```ruby
+<% @places.each do |place|
+  <%= render "place", place: place  %> # _place.html.erb dosyasını render eder.
+<% end %>
+```
+
+`_place.html.erb`
+```ruby
+<li><%= place.name %></li>
+```
+
+**Alternatif:**
+```ruby
+<% @places.each do |place|
+  <%= render "place", foo: place  %> # _place.html.erb dosyasını render eder.
+<% end %>
+```
+
+`_place.html.erb`
+```ruby
+<li><%= foo.name %></li>
+```
+
+
+---
+
+  # Referanslar
+
+* http://guides.rubyonrails.org/layouts_and_rendering.html
+
+---
+    </textarea>
+    <script src="https://gnab.github.io/remark/downloads/remark-latest.min.js">
+    </script>
+    <script>
+    remark.macros.scale = function (percentage) {
+      var url = this;
+      return '<img src="' + url + '" style="width: ' + percentage + '" />';
+    };
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
