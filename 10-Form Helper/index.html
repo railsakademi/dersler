@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>10 - Form Helper</title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+      .remark-inline-code {background: #e7e8e2; }
+
+      .small{
+        font-size: 15px;
+        margin-left: -50px;
+        margin-right: -50px;
+      }
+
+      .shrink-image img{
+        width: 50%;
+      }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# Form Helper
+
+---
+
+# Form Helper
+
+* Formlar web uygulamalarında kullanıcılardan input almak için temel yöntemdir.
+* HTML içerisinde formların kullanımı kısa sürede karmaşık hale gelebilir.
+* Rails bunun önüne geçmek için view dosyaları içerisinde kullanabileceğimiz form helperlarını sağlar
+
+---
+
+# Basit Form
+
+En temel form helperı `form_tag` methodudur.
+
+```ruby
+<%= form_tag do %>
+  Form contents
+<% end %>
+```
+
+Aşağıdaki HTML kodunu üretir;
+
+```html
+<form accept-charset="UTF-8" action="/" method="post">
+  <input name="utf8" type="hidden" value="&#x2713;" />
+  <input name="authenticity_token" type="hidden" value="J7CBxfHalt49OSHp27hblqK20c9PgwJ108nDHX/8Cts=" />
+  Form contents
+</form>
+```
+
+Form Helperları otomatik olarak 2 tane hidden input oluşturur;
+* **utf8** browserların utf8 kullanması içindir.
+* **authenticity_token** GET harici formlarda CSRF(cross-site request forgery) engellemek içindir.
+
+---
+
+# Basit bir arama formu
+
+Bir arama formu için 4 tane HTML elemanına ihtiyacımız var;
+
+* GET methodu kullanan bir form
+* text input alanı
+* input için bir label
+* buton
+
+Bunları oluşturmak için aşağıdaki gibi Rails helperlarını kullanabiliriz;
+
+```ruby
+<%= form_tag("/search", method: "get") do %>
+  <%= label_tag(:q, "Search for:") %>
+  <%= text_field_tag(:q) %>
+  <%= submit_tag("Search") %>
+<% end %>
+```
+
+---
+
+# Basit bir arama formu
+
+HTML Çıktısı;
+```html
+<form accept-charset="UTF-8" action="/search" method="get">
+  <input name="utf8" type="hidden" value="&#x2713;" />
+  <label for="q">Search for:</label>
+  <input id="q" name="q" type="text" />
+  <input name="commit" type="submit" value="Search" />
+</form>
+```
+
+---
+
+# Tüm form helperları
+
+```ruby
+<%= text_field_tag(:q) %>
+<%= check_box_tag(:pet_dog) %>
+<%= radio_button_tag(:age, "child") %>
+<%= text_area_tag(:message, "Hi, nice site", size: "24x6") %>
+<%= password_field_tag(:password) %>
+<%= hidden_field_tag(:parent_id, "5") %>
+<%= search_field(:user, :name) %>
+<%= telephone_field(:user, :phone) %>
+<%= date_field(:user, :born_on) %>
+<%= datetime_field(:user, :meeting_time) %>
+<%= datetime_local_field(:user, :graduation_day) %>
+<%= month_field(:user, :birthday_month) %>
+<%= week_field(:user, :birthday_week) %>
+<%= url_field(:user, :homepage) %>
+<%= email_field(:user, :address) %>
+<%= color_field(:user, :favorite_color) %>
+<%= time_field(:task, :started_at) %>
+<%= number_field(:product, :price, in: 1.0..20.0, step: 0.5) %>
+<%= range_field(:product, :discount, in: 1..100) %>
+```
+
+---
+
+# Model Nesneleri İçin Formlar
+
+* Formları model nesnelerini oluşturmak ya da düzenlemek için kullanabiliriz.
+* Modeller için olan methodlarda `_tag` yoktur. `text_field` - `text_field_tag`
+* Bu helperların ilk parametresi modelin adı, ikincisi ise modelin alanıdır;
+
+```ruby
+<%= text_field(:place, :name) %>
+```
+
+**Çıktısı:**
+
+```html
+<input id="place_name" name="place[name]" type="text"/>
+```
+
+Bu alanın olduğu formu gönderdiğimizde, kullanıcının girdiği değere controllerda `params[:place][:name]` ile erişebiliriz.
+
+Burada `params[:place]` bir hashtir ve `Place.new` gibi methodlara parametre olarak geçirebiliriz.
+
+---
+
+# Formu Nesneye Bağlamak
+
+`form_for` methodunu kullanarak Active Record nesnelerini formlara bağlayabiliriz. Yani bir model için form oluşturabiliriz.
+
+`places_controller.rb`
+```ruby
+def new
+  @place = Place.new
+end
+```
+
+`app/views/places/new.html.erb`
+```ruby
+<%= form_for @place, url: {action: "create"} do |f| %>
+  <%= f.text_field :name %>
+  <%= f.text_field :city %>
+  <%= f.submit "Create" %>
+<% end %>
+```
+
+---
+
+# URL Helperlarını Kullanmak
+
+
+```ruby
+## Yeni Place oluştururken
+# POST /places
+form_for(@place, url: places_path)
+form_for(@place)
+
+## Varolan Place'i güncellerken
+# PATCH /places/:id
+form_for(@place, url: place_path(@place), html: {method: "patch"})
+form_for(@place)
+```
+---
+
+# Formdan Gelen Veriyi Modele Geçirmek
+
+* Formlardan gelen verilere `params` içerisinde erişebiliriz
+* Ancak formdan gelen tüm verileri modele geçirmemeliyiz.
+* Bunun için geçireceğimiz parametreleri `whitelist` yapmamız gerekir.
+
+```ruby
+def create
+  @place = Place.new(place_params)
+  # ...
+end
+
+private
+  def place_params
+    params.require(:place).permit(:name, :city)
+  end
+
+  # params => {
+  #   "place" => {
+  #    "name" => "Starbucks",
+  #    "city" => "Antalya"  
+  #   }
+  # }
+
+```
+---
+
+
+  # Referanslar
+
+* http://guides.rubyonrails.org/form_helpers.html
+* http://www.bilgiguvenligi.gov.tr/web-guvenligi/webdeki-buyuk-tehlike-csrf.html
+* https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF)
+
+---
+    </textarea>
+    <script src="https://gnab.github.io/remark/downloads/remark-latest.min.js">
+    </script>
+    <script>
+    remark.macros.scale = function (percentage) {
+      var url = this;
+      return '<img src="' + url + '" style="width: ' + percentage + '" />';
+    };
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
