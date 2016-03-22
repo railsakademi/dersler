@@ -33,6 +33,14 @@ class: center, middle
 
 ---
 
+# Neden Model Seviyesinde?
+
+* **Veritabanı validationları** veritabanına bağımlılık yaratıyor, test edilmesi ve yönetilmesi zor.
+* **Client-side validation** kullanıcı tarafından by-pass edilebilir.
+* **Controller seviyesi validationları** Controller dosyalarını küçük tutmak daha iyidir.
+
+---
+
 # Genel Bakış
 
 Basit bir validation örneği:
@@ -53,6 +61,111 @@ Place.create(name: nil).valid? # => false
 ```
 
 ---
+
+# `valid?` methodu
+
+Bir model objesinin valid, yani geçerli olup olmadığını `true` veya `false` değerleri döndürerek kontrol eder.
+
+Eğer hata var ise hatalara `errors` methodu ile erişebiliriz.
+
+---
+
+# Validation Helper `exclusion`
+
+Alanın verilen değerlerden hariç bir değer almasını doğrular.
+
+```ruby
+class Account < ActiveRecord::Base
+  validates :subdomain, exclusion: { in: %w(www us ca jp),
+    message: "%{value} is reserved." }
+end
+```
+
+---
+
+# Validation Helper `format`
+
+Alanın verilen formata uygun olup olmadığını doğrular.
+
+```ruby
+class Product < ActiveRecord::Base
+  validates :legacy_code, format: { with: /\A[a-zA-Z]+\z/,
+    message: "only allows letters" }
+end
+```
+
+
+---
+
+# Validation Helper `inclusion`
+
+Alanın verilen değerlerden bir değer almasını doğrular.
+
+```ruby
+class Coffee < ActiveRecord::Base
+  validates :size, inclusion: { in: %w(small medium large),
+    message: "%{value} is not a valid size" }
+end
+```
+
+---
+
+# Validation Helper `length`
+
+Alanın değerinin verilen uzunluğa uygun olmasını doğrular.
+
+```ruby
+class Person < ActiveRecord::Base
+  validates :name, length: { minimum: 2 }
+  validates :bio, length: { maximum: 500 }
+  validates :password, length: { in: 6..20 }
+  validates :registration_number, length: { is: 6 }
+end
+```
+
+---
+
+# Validation Helper `presence`
+
+Alanın değerinin boş olmamasını doğrular.
+
+```ruby
+class Person < ActiveRecord::Base
+  validates :name, :login, :email, presence: true
+end
+```
+
+---
+
+# Validation Helper `uniqueness`
+
+Alanın değerinin eşsiz olmasını doğrular.
+
+```ruby
+class Account < ActiveRecord::Base
+  validates :email, uniqueness: true
+end
+```
+
+---
+
+# Kendi Validation Methodunuz
+
+Rails'ın sağladığı validation helperları yeterli gelmiyorsa kendiniz bir validator yazabilirsiniz.
+
+```ruby
+class GoodnessValidator < ActiveModel::Validator
+  def validate(record)
+    if record.first_name == "Evil"
+      record.errors[:base] << "This person is evil"
+    end
+  end
+end
+
+class Person < ActiveRecord::Base
+  validates_with GoodnessValidator
+end
+```
 
 ---
 

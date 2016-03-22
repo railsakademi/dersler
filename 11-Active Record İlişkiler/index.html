@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>11 - Active Record İlişkiler</title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+      .remark-inline-code {background: #e7e8e2; }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# Active Record İlişkiler
+
+---
+
+# Active Record İlişkiler(Association)
+
+Modeller arasındaki ilişkileri kullanmak bazı işlemleri daha kolay yapmamızı sağlar.
+
+Örneğin aşağıdaki gibi 2 tane modelimiz olsun;
+
+```ruby
+class Place < ActiveRecord::Base
+end
+
+class Comment < ActiveRecord::Base
+end
+```
+
+Her mekan hakkında kullanıcılar tarafından yazılmış yorumları veritabanında saklamak istiyoruz.
+
+ Bunun için `comments` tablosu ile `places` tablosu arasında veritabanı seviyesinde bir ilişki kurmamız gerekir. `comments` tablosuna mekanın IDsini tutmak için
+`place_id` alanı ekleyebiliriz.
+
+
+---
+
+![](1.png)
+
+Örnek bir veritabanı içeriği yukarıdaki gibi olabilir.
+
+IDsi 1 olan mekan hakkındaki tüm yorumları veritabanından çekmek için aşağıdaki gibi bir `where` sorgusu yapabiliriz;
+
+```ruby
+@comments = Comment.where(place_id: 1)
+@comments = Comment.where(place_id: @place.id)
+```
+
+---
+
+Ama bunun yerine Active Record ilişkilerini de kullanabiliriz.
+```ruby
+class Place < ActiveRecord::Base
+  has_many :comments
+end
+
+class Comment < ActiveRecord::Base
+  belongs_to :place
+end
+```
+
+Böylece bir mekanın tüm yorumlarını almak için aşağıdaki gibi kullanabiliriz;
+
+```ruby
+@comments = @place.comments
+
+```
+
+---
+
+# `belongs_to`
+
+```ruby
+class Place < ActiveRecord::Base
+  has_many :comments
+end
+
+class Comment < ActiveRecord::Base
+  belongs_to :place
+end
+```
+
+---
+
+# `has_one`
+
+```ruby
+class Place < ActiveRecord::Base
+  has_one :manager
+end
+
+class Manager < ActiveRecord::Base
+  belongs_to :place
+end
+```
+
+---
+
+# `has_many through`
+
+```ruby
+class Place < ActiveRecord::Base
+  has_many :bookings
+  has_many :customers, through: :bookings
+end
+
+class Booking < ActiveRecord::Base
+  belongs_to :place
+  belongs_to :customer
+end
+
+class Customer < ActiveRecord::Base
+  has_many :bookings
+  has_many :places, through: :bookings
+end
+
+```
+
+---
+
+# `has_and_belongs_to_many`
+
+```ruby
+class Place < ActiveRecord::Base
+  has_and_belongs_to_many :categories
+end
+
+class Category < ActiveRecord::Base
+  has_and_belongs_to_many :places
+end
+
+```
+
+---
+
+`has_and_belongs_to_many` vs `has_many through`
+
+Eğer aradaki modelde(join model, join table) referanslar haricinde ekstra alanlar varsa `has_many through` kullanmalıyız.
+
+Ekstra alan yoksa sadece tabloyu oluşturup, model oluşturmadan `has_and_belongs_to_many` kullanabiliriz.
+
+---
+
+---
+  # Referanslar
+
+* http://guides.rubyonrails.org/association_basics.html
+
+---
+    </textarea>
+    <script src="https://gnab.github.io/remark/downloads/remark-latest.min.js">
+    </script>
+    <script>
+    remark.macros.scale = function (percentage) {
+      var url = this;
+      return '<img src="' + url + '" style="width: ' + percentage + '" />';
+    };
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
