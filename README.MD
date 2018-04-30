@@ -1,5 +1,5 @@
 # Dersler
-Ruby on Rails 101 kursunun slaytları ve ders içeriği
+Ruby on Rails 101 eğitiminin slaytları ve ders içeriği
 
 # İçerik
 
@@ -9,16 +9,16 @@ Ders İçeriği
 
 
 
-1. Hello World
-2. Ruby Syntax'ı
-3. Veri Tipleri
+1. Merhaba Dünya!
+2. Ruby Yazım'ı
+3. Veri Biçimleri
 4. Koşul İfadeleri
-6. İterasyon
-7. Methodlar
-8. Obje ve Sınıflar
-9. Modüller
+6. Adımlama
+7. Yöntemler
+8. Nesne ve Sınıflar
+9. Bileşenler
 
 
 # Lisans
  
-Bu projenin içeriği ve kendisi [Creative Commons Attribution 3.0](https://creativecommons.org/licenses/by/3.0/legalcode) lisansı ile lisanslanmıştır. Bu projeye atıfta bulunmadan, link vermeden dağıltılması, değiştirilmesi ve kopyalanması yasaktır. 
+Bu tasarının içeriği ve kendisi [Creative Commons Attribution 3.0](https://creativecommons.org/licenses/by/3.0/legalcode) lisansı ile lisanslanmıştır. Bu tasarıya atıfta bulunmadan, bağlantı vermeden dağıltılması, değiştirilmesi ve kopyalanması yasaktır. 
